@@ -1,0 +1,76 @@
+from datetime import datetime
+import os
+from flask import Flask, jsonify, request
+import pytz
+import requests
+
+app = Flask(__name__)
+
+TELEGRAM_BOT_TOKEN = "7924553793:AAH_bk0YoW0EqTqQpjKS77n3WiWW0V9Yfag"
+TELEGRAM_CHAT_ID = "-1003805942629"
+
+
+def send_telegram_message(text):
+  url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+  payload = {
+      "chat_id": TELEGRAM_CHAT_ID,
+      "text": text,
+      "parse_mode": "Markdown",
+  }
+  try:
+    response = requests.post(url, json=payload)
+    return response.json()
+  except Exception as e:
+    print(f"Error: {e}")
+    return None
+
+
+@app.route("/", methods=["GET"])
+def home():
+  return "Ahmed Pro Ultimate Bot is running successfully!"
+
+
+@app.route("/webhook", methods=["POST"])
+def webhook():
+  data = request.json
+  if not data:
+    return jsonify({"status": "error", "message": "No data received"}), 400
+
+  ticker = data.get("ticker", "UNKNOWN")
+  interval = data.get("interval", "15m")
+  price = data.get("price", "0.0")
+  signal_type = data.get("signal", "GOLDEN BULLISH")
+  score = data.get("score", "82%")
+  status_candle = data.get("status", "الشمعة ما زالت قيد التكوين")
+
+  saudi_tz = pytz.timezone("Asia/Riyadh")
+  now_saudi = datetime.now(saudi_tz).strftime("%d-%m-%Y %H:%M:%S")
+
+  if "BULLISH" in signal_type.upper() or "شراء" in signal_type:
+    emoji_title = "🟡 GOLDEN BULLISH — LIVE"
+    action_text = "✅  شمعة ذهبية صاعدة الآن"
+  else:
+    emoji_title = "🟡 GOLDEN BEARISH — LIVE"
+    action_text = "🛑 شمعة ذهبية هابطة"
+
+  message = (
+      f"{emoji_title}\n\n"
+      f"💰 العملة: #{ticker}\n"
+      f"⏰ الفريم: {interval}\n"
+      f"💲 السعر: {price}\n\n"
+      f"{action_text}\n"
+      f"⏳ {status_candle}\n"
+      f"⚡️ وقت ظهور الإشارة: {now_saudi}\n\n"
+      f"🔥 قوة الإشارة: قوية — {score}\n\n"
+      f"🕒 {now_saudi} (السعودية)\n\n"
+      f"🔗 Binance Futures | TradingView\n\n"
+      f"🤖 Ahmed Pro Ultimate Signals"
+  )
+
+  send_telegram_message(message)
+  return jsonify({"status": "success"}), 200
+
+
+if name == "__main__":
+  port = int(os.environ.get("PORT", 5000))
+  app.run(host="0.0.0.0", port=port)
