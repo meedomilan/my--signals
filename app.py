@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request
 import pytz
 import requests
 
-app = Flask(__name__)
+app = Flask(name)
 
 TELEGRAM_BOT_TOKEN = "7924553793:AAH_bk0YoW0EqTqQpjKS77n3WiWW0V9Yfag"
 TELEGRAM_CHAT_ID = "-1003805942629"
@@ -71,6 +71,6 @@ def webhook():
   return jsonify({"status": "success"}), 200
 
 
-if name == "__main__":
+if name == "main":
   port = int(os.environ.get("PORT", 5000))
   app.run(host="0.0.0.0", port=port)
