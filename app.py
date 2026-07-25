@@ -97,10 +97,4 @@ def scanner_loop():
                             current_time_str = get_saudi_time()
 
                             if signal_type == "BULLISH":
-                                lines = [
-                                    "GOLDEN BULLISH - LIVE",
-                                    "",
-                                    f"Coin: {formatted_symbol}",
-                                    f"Timeframe: {timeframe}",
-                                    f"Price: {close_p:.5f}",
-                                    "",
+                                msg = "GOLDEN BULLISH - LIVE\n\nCoin: " + formatted_symbol + "\nTimeframe: " + timeframe + "\nPrice: " + f"{close_p:.
