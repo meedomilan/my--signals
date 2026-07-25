@@ -105,23 +105,10 @@ def scanner_loop():
                         current_time_str = get_saudi_time()
 
                         if signal_type == "BULLISH":
-                            msg = f"""🟡 GOLDEN BULLISH — LIVE
-
-💰 العملة: {formatted_symbol}
-⏰ الفريم: {timeframe}
-💲 السعر: {current_price:.5f}
-
-✅ ظهرت شمعة ذهبية صاعده الآن
-⚡ وقت ظهور الشمعة الذهبية: {current_time_str}
-⏳ الشمعة ما زالت قيد التكوين
-🔒 تم تاكيد الشمعه
-
-🔥 قوة الإشارة: {strength_desc} — {strength_val}%
-
-🕒 {current_time_str} (السعودية)
-
-🔗 Binance Futures | TradingView
-
-🤖 Ahmed Pro Ultimate Signals"""
-                        else:
-                            msg = f"""🟡 GOLDEN BEARISH — LIVE
+                            msg = "🟡 GOLDEN BULLISH — LIVE\n\n"
+                            msg += f"💰 العملة: {formatted_symbol}\n"
+                            msg += f"⏰ الفريم: {timeframe}\n"
+                            msg += f"💲 السعر: {current_price:.5f}\n\n"
+                            msg += "✅ ظهرت شمعة ذهبية صاعده الآن\n"
+                            msg += f"⚡ وقت ظهور الشمعة الذهبية: {current_time_str}\n"
+                            msg += "⏳ الشمعة ما زالت قيد التكوين\n"
