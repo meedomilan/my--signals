@@ -78,13 +78,13 @@ def scanner_loop():
                             abs_change = abs(change_pct)
                             if abs_change >= 5.0 or body_ratio >= 0.8:
                                 strength_val = min(int(85 + (abs_change - 5.0) * 3), 100)
-                                strength_desc = "قوية"
+                                strength_desc = "Strong"
                             elif abs_change >= 3.0:
                                 strength_val = int(60 + (abs_change - 3.0) * 10)
-                                strength_desc = "متوسطة"
+                                strength_desc = "Medium"
                             else:
                                 strength_val = int(40 + (abs_change - 2.0) * 15)
-                                strength_desc = "ضعيفة"
+                                strength_desc = "Weak"
 
                             signal_type = "BULLISH" if close_p > open_p else "BEARISH"
                             candle_time_stamp = candles[-1][0]
@@ -97,8 +97,10 @@ def scanner_loop():
                             current_time_str = get_saudi_time()
 
                             if signal_type == "BULLISH":
-                                msg = "GOLDEN BULLISH - LIVE\n\n"
-                                msg += f"العملة: {formatted_symbol}\n"
-                                msg += f"الفريم: {timeframe}\n"
-                                msg += f"السعر: {close_p:.5f}\n\n"
-                                msg += "ظهرت شمعة ذهبية صاعدة الآن\n"
+                                lines = [
+                                    "GOLDEN BULLISH - LIVE",
+                                    "",
+                                    f"Coin: {formatted_symbol}",
+                                    f"Timeframe: {timeframe}",
+                                    f"Price: {close_p:.5f}",
+                                    "",
