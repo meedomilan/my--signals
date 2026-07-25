@@ -95,6 +95,43 @@ def scanner_loop():
                             history_signals[sig_key] = True
 
                             current_time_str = get_saudi_time()
+                            price_str = "{:.5f}".format(close_p)
 
                             if signal_type == "BULLISH":
-                                msg = "GOLDEN BULLISH - LIVE\n\nCoin: " + formatted_symbol + "\nTimeframe: " + timeframe + "\nPrice: " + f"{close_p:.
+                                p1 = "GOLDEN BULLISH - LIVE\n\nCoin: " + formatted_symbol + "\n"
+                                p2 = "Timeframe: " + timeframe + "\n"
+                                p3 = "Price: " + price_str + "\n\n"
+                                p4 = "Golden Bullish Candle Appeared Now\n"
+                                p5 = "Golden Candle Time: " + current_time_str + "\n"
+                                p6 = "Candle Still Forming\nCandle Confirmed\n\n"
+                                p7 = "Signal Strength: " + strength_desc + " - " + str(strength_val) + "%\n\n"
+                                p8 = current_time_str + " (Saudi Arabia)\n\n"
+                                p9 = "Binance Futures | TradingView\n\nAhmed Pro Ultimate Signals"
+                                msg = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9
+                            else:
+                                p1 = "GOLDEN BEARISH - LIVE\n\nCoin: " + formatted_symbol + "\n"
+                                p2 = "Timeframe: " + timeframe + "\n"
+                                p3 = "Price: " + price_str + "\n\n"
+                                p4 = "Golden Bearish Candle Appeared Now\n"
+                                p5 = "Golden Candle Time: " + current_time_str + "\n"
+                                p6 = "Candle Still Forming\nCandle Confirmed\n\n"
+                                p7 = "Signal Strength: " + strength_desc + " - " + str(strength_val) + "%\n\n"
+                                p8 = current_time_str + " (Saudi Arabia)\n\n"
+                                p9 = "Binance Futures | TradingView\n\nAhmed Pro Ultimate Signals"
+                                msg = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9
+
+                            send_telegram(msg)
+                            time.sleep(2)
+                    except Exception:
+                        continue
+
+            time.sleep(30)
+
+        except Exception as e:
+            print(f"Scanner error: {e}")
+            time.sleep(30)
+
+threading.Thread(target=scanner_loop, daemon=True).start()
+
+port = int(os.environ.get("PORT", 5000))
+app.run(host="0.0.0.0", port=port)
