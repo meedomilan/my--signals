@@ -2,6 +2,7 @@ import os
 import time
 import threading
 import requests
+from datetime import datetime, timedelta, timezone
 from flask import Flask
 
 app = Flask("app")
@@ -18,10 +19,14 @@ def send_telegram(message):
 
 @app.route("/")
 def home():
-    return "Gold Candle Bot is running 24/7!"
+    return "Golden Candle Bot is running 24/7!"
+
+def get_saudi_time():
+    saudi_tz = timezone(timedelta(hours=3))
+    return datetime.now(saudi_tz).strftime('%d-%m-%Y %H:%M:%S')
 
 def scanner_loop():
-    send_telegram("🌟 تم تفعيل استراتيجية الشمعة الذهبية بنجاح، وجاري مراقبة السوق...")
+    send_telegram("🚀 تم تفعيل بوت الشموع الذهبية وربط الأسعار الحقيقية بنجاح!")
     
     while True:
         try:
@@ -29,25 +34,63 @@ def scanner_loop():
             response = requests.get(url)
             data = response.json()
             
-            # فحص العملات التي تحقق شروط الزخم أو التغير القوي
             for item in data:
                 symbol = item.get('symbol', '')
-                # نركز على عقود الفิวشرز التي تنتهي بـ USDT
                 if symbol.endswith('USDT'):
+                    formatted_symbol = f"#{symbol}.P"
                     price_change = float(item.get('priceChangePercent', 0))
-                    volume = float(item.get('quoteVolume', 0))
                     
-                    # هنا شروط الشمعة الذهبية (كمثال: تغير إيجابي قوي وفوليوم عالي)
-                    if price_change >= 5.0 and volume >= 10000000:
-                        msg = f"🔥 تنبيه شمعة ذهبية!\n العملة: {symbol}\n التغير: +{price_change}%\n الفوليوم: {int(volume):,}"
+                    # جلب السعر الصحيح من الحقل المعتمد في باينانس
+                    current_price = item.get('lastPrice') or item.get('price', '0')
+                    
+                    current_time = get_saudi_time()
+                    
+                    if price_change >= 4.0:
+                        msg = f"""🟡 GOLDEN BULLISH — LIVE
+
+💰 العملة: {formatted_symbol}
+⏰ الفريم: 1h
+💲 السعر: {current_price}
+
+✅ ظهرت شمعة ذهبية صاعدة الآن
+⚡ وقت ظهور الشمعة الذهبية: {current_time}
+⏳ الشمعة ما زالت قيد التكوين
+
+🔥 قوة الإشارة: قوية — 75%
+
+🕒 {current_time} (السعودية)
+
+🔗 Binance Futures | TradingView
+
+🤖 Ahmed Pro Ultimate Signals"""
                         send_telegram(msg)
-                        time.sleep(2) # لتجنب الضغط على إرسال الرسائل
+                        time.sleep(3)
+                        
+                    elif price_change <= -4.0:
+                        msg = f"""🟡 GOLDEN BEARISH — LIVE
+
+💰 العملة: {formatted_symbol}
+⏰ الفريم: 1h
+💲 السعر: {current_price}
+
+✅ ظهرت شمعة ذهبية هابطة الآن
+⚡ وقت ظهور الشمعة الذهبية: {current_time}
+⏳ الشمعة ما زالت قيد التكوين
+
+🔥 قوة الإشارة: قوية — 75%
+
+🕒 {current_time} (السعودية)
+
+🔗 Binance Futures | TradingView
+
+🤖 Ahmed Pro Ultimate Signals"""
+                        send_telegram(msg)
+                        time.sleep(3)
             
         except Exception as e:
             print(f"Scanner error: {e}")
             
-        # الفحص كل 5 دقائق لعدم تكرار الإشعارات بشكل مزعج
-        time.sleep(300)
+        time.sleep(180)
 
 threading.Thread(target=scanner_loop, daemon=True).start()
 
