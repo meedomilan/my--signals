@@ -34,7 +34,7 @@ def get_saudi_time():
     return datetime.now(saudi_tz).strftime('%d-%m-%Y %H:%M:%S')
 
 def scanner_loop():
-    send_telegram("🚀 تم تشغيل بوت الشموع الذهبية بنجاح!")
+    send_telegram("Bot is running successfully!")
     history_signals = {}
 
     while True:
@@ -97,8 +97,8 @@ def scanner_loop():
                             current_time_str = get_saudi_time()
 
                             if signal_type == "BULLISH":
-                                msg = "🟡 GOLDEN BULLISH — LIVE\n\n"
-                                msg += f"💰 العملة: {formatted_symbol}\n"
-                                msg += f"⏰ الفريم: {timeframe}\n"
-                                msg += f"💲 السعر: {close_p:.5f}\n\n"
-                                msg += "✅ ظهرت شمعة ذهبية صاعده الآن\n"
+                                msg = "GOLDEN BULLISH - LIVE\n\n"
+                                msg += f"العملة: {formatted_symbol}\n"
+                                msg += f"الفريم: {timeframe}\n"
+                                msg += f"السعر: {close_p:.5f}\n\n"
+                                msg += "ظهرت شمعة ذهبية صاعدة الآن\n"
