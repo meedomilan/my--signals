@@ -18,17 +18,36 @@ def send_telegram(message):
 
 @app.route("/")
 def home():
-    return "Bot is running 24/7!"
+    return "Gold Candle Bot is running 24/7!"
 
 def scanner_loop():
-    send_telegram("🚀 تم تشغيل بوت فحص الأسواق بنجاح وهو الآن مراقب للسوق 24/7!")
+    send_telegram("🌟 تم تفعيل استراتيجية الشمعة الذهبية بنجاح، وجاري مراقبة السوق...")
+    
     while True:
         try:
             url = "https://fapi.binance.com/fapi/v1/ticker/24hr"
-            requests.get(url)
+            response = requests.get(url)
+            data = response.json()
+            
+            # فحص العملات التي تحقق شروط الزخم أو التغير القوي
+            for item in data:
+                symbol = item.get('symbol', '')
+                # نركز على عقود الفิวشرز التي تنتهي بـ USDT
+                if symbol.endswith('USDT'):
+                    price_change = float(item.get('priceChangePercent', 0))
+                    volume = float(item.get('quoteVolume', 0))
+                    
+                    # هنا شروط الشمعة الذهبية (كمثال: تغير إيجابي قوي وفوليوم عالي)
+                    if price_change >= 5.0 and volume >= 10000000:
+                        msg = f"🔥 تنبيه شمعة ذهبية!\n العملة: {symbol}\n التغير: +{price_change}%\n الفوليوم: {int(volume):,}"
+                        send_telegram(msg)
+                        time.sleep(2) # لتجنب الضغط على إرسال الرسائل
+            
         except Exception as e:
             print(f"Scanner error: {e}")
-        time.sleep(60)
+            
+        # الفحص كل 5 دقائق لعدم تكرار الإشعارات بشكل مزعج
+        time.sleep(300)
 
 threading.Thread(target=scanner_loop, daemon=True).start()
 
